@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- 声明应用需要的权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
+
     <application
         android:allowBackup="true"
         android:label="QDReadHook"
@@ -12,22 +17,14 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.Material3.DayNight.NoActionBar">
 
-        <meta-data
-            android:name="xposedmodule"
-            android:value="true" />
-        <meta-data
-            android:name="xposeddescription"
-            android:value="起点阅读增强功能 目前仅支持:7.9.334-1196 + 正式版本" />
-        <meta-data
-            android:name="xposedminversion"
-            android:value="90" />
-        <meta-data
-            android:name="xposedsharedprefs"
-            android:value="true" />
-        <meta-data
-            android:name="xposedscope"
-            android:value="com.qidian.QDReader" />
+        <!-- Xposed 模块元数据 -->
+        <meta-data android:name="xposedmodule" android:value="true" />
+        <meta-data android:name="xposeddescription" android:value="起点阅读增强功能，自动根据包名生效" />
+        <meta-data android:name="xposedminversion" android:value="90" />
+        <meta-data android:name="xposedsharedprefs" android:value="true" />
+        <meta-data android:name="xposedscope" android:value="com.qidian.QDReader" />
 
+        <!-- 主 Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -36,12 +33,12 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
             </intent-filter>
         </activity>
 
+        <!-- Activity 别名，用于 Xposed 设置入口 -->
         <activity-alias
             android:name=".MainActivityAlias"
             android:targetActivity=".MainActivity"
@@ -52,16 +49,6 @@
             </intent-filter>
         </activity-alias>
 
-
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-    <uses-permission
-        android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
 </manifest>
