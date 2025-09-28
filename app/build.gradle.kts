@@ -46,7 +46,8 @@ android {
         "--allow-reserved-package-id", "--package-id", "0x64"
     )
 
-    signingConfigs {
+   signingConfigs {
+    if (keystorePropertiesFile.exists()) {
         create("xihantest") {
             keyAlias = keystoreProperties["keyAlias"] as String
             keyPassword = keystoreProperties["keyPassword"] as String
@@ -56,24 +57,26 @@ android {
             enableV4Signing = true
         }
     }
+}
 
     defaultConfig {
-        minSdk = androidMinSdkVersion
-        targetSdk = androidTargetSdkVersion
-        versionCode = verCode
-        versionName = verName
+    minSdk = androidMinSdkVersion
+    targetSdk = androidTargetSdkVersion
+    versionCode = verCode
+    versionName = verName
 
-//        ndk.abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
+    resourceConfigurations.addAll(listOf("zh"))
+    buildConfigField("long", "BUILD_TIMESTAMP", "${System.currentTimeMillis()}L")
 
-        resourceConfigurations.addAll(listOf("zh"))
-
-        buildConfigField("long", "BUILD_TIMESTAMP", "${System.currentTimeMillis()}L")
-
-        signingConfig = signingConfigs.getByName("xihantest")
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    // 原来这里强制用 xihantest，现在要加判断
+    signingConfig = if (keystorePropertiesFile.exists()) {
+        signingConfigs.getByName("xihantest")
+    } else {
+        signingConfigs.getByName("debug")
     }
 
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+}
     buildTypes {
         release {
             isDebuggable = false
